@@ -1,7 +1,7 @@
 export default function Lab1() {
     return (
     <div>
-    <h2>Lab1</h2>
+    <h2>Lab1 - Anthony Park Section 2</h2>
     <h3>HTML Examples</h3>
       <div id="wd-h-tag">
         <h4>Heading Tags</h4>
@@ -274,7 +274,7 @@ to get dummy text<br/>
 <h4>Anchor tag</h4>
 Please
 <a href="https://github.com/anthonypark0/anthonypark-react-web-app-cs4550" id="wd-github">click here</a>
-to get dummy GitHub repository<br/>
+to get GitHub repository<br/>
 
         </div>
     }
