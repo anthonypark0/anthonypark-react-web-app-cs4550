@@ -1,6 +1,5 @@
 import { Button, InputGroup, FormControl, ListGroup } from "react-bootstrap";
 import { AiOutlineFolderAdd, AiOutlineFileAdd } from "react-icons/ai";
-import GreenCheckmark from "../Modules/GreenCheckmark";
 import { FaSearch } from "react-icons/fa";
 
 export default function Assignments() {
