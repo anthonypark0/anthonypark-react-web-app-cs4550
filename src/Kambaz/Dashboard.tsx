@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import {Row, Col, Card, Button, FormControl } from "react-bootstrap"
-
+import { useSelector } from "react-redux";
+import * as db from "./Database";
 export default function Dashboard(
     { courses, course, setCourse, addNewCourse,
       deleteCourse, updateCourse }: {
