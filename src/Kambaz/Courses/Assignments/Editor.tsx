@@ -1,10 +1,10 @@
 import { Form, Row, Col } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { assignments } from "../../Database"; 
+
 export default function AssignmentEditor() {
   const { cid, aid } = useParams(); 
   const assignment = assignments.find((a) => a._id === aid);
-
   if (!assignment) {
     return <p className="text-danger text-center mt-3">Assignment not found.</p>;
   }
