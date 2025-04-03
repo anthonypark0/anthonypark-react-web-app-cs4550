@@ -1,104 +1,26 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import * as client from "./client";
 import { useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
 import { setCurrentUser } from "./reducer";
-import * as db from "../Database";
-
+import { FormControl } from "react-bootstrap"
 export default function Signup() {
-  const [credentials, setCredentials] = useState<any>({});
-  const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const [user, setUser] = useState<any>({});
   const navigate = useNavigate();
-
-  const signup = () => {
-    const { username, password, verifyPassword } = credentials;
-
-    if (!username || !password || !verifyPassword) {
-      setError("All fields are required.");
-      return;
-    }
-
-    if (password !== verifyPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    const existingUser = db.users.find((u: any) => u.username === username);
-    if (existingUser) {
-      setError("Username already taken.");
-      return;
-    }
-
-    const newUser = {
-      _id: Date.now().toString(),         // or use some unique ID logic
-      username,
-      password,
-      firstName: "",
-      lastName: "",
-      email: "",
-      dob: "",
-      role: "USER",
-      loginId: "",
-      section: "",
-      lastActivity: "",
-      totalActivity: "",
-    };
-
-    db.users.push(newUser); // Save user in local db
-    dispatch(setCurrentUser(newUser));   // Log them in
-    navigate("/Kambaz/Dashboard");       // Redirect
+  const dispatch = useDispatch();
+  const signup = async () => {
+    const currentUser = await client.signup(user);
+    dispatch(setCurrentUser(currentUser));
+    navigate("/Kambaz/Account/Profile");
   };
-
   return (
-    <div id="wd-signup-screen" className="p-4">
-      <h1 className="mb-3">Sign Up</h1>
-
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      <Form.Control
-        id="wd-username"
-        placeholder="Username"
-        className="mb-2"
-        value={credentials.username || ""}
-        onChange={(e) =>
-          setCredentials({ ...credentials, username: e.target.value })
-        }
-      />
-      <Form.Control
-        id="wd-password"
-        type="password"
-        placeholder="Password"
-        className="mb-2"
-        value={credentials.password || ""}
-        onChange={(e) =>
-          setCredentials({ ...credentials, password: e.target.value })
-        }
-      />
-      <Form.Control
-        id="wd-password-verify"
-        type="password"
-        placeholder="Verify Password"
-        className="mb-3"
-        value={credentials.verifyPassword || ""}
-        onChange={(e) =>
-          setCredentials({ ...credentials, verifyPassword: e.target.value })
-        }
-      />
-      <Button
-        id="wd-signup-btn"
-        className="btn btn-primary w-100 mb-2"
-        onClick={signup}
-      >
-        Sign Up
-      </Button>
-
-      <p>
-        Already have an account?
-        <Link id="wd-signin-link" to="/Kambaz/Account/Signin" className="ms-1">
-          Sign in
-        </Link>
-      </p>
+    <div className="wd-signup-screen">
+      <h1>Sign up</h1>
+      <FormControl value={user.username} onChange={(e) => setUser({ ...user, username: e.target.value })}
+             className="wd-username b-2" placeholder="username" />
+      <FormControl value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })}
+             className="wd-password mb-2" placeholder="password" type="password"/>
+      <button onClick={signup} className="wd-signup-btn btn btn-primary mb-2 w-100"> Sign up </button><br />
+      <Link to="/Kambaz/Account/Signin" className="wd-signin-link">Sign in</Link>
     </div>
-  );
-}
+);}
