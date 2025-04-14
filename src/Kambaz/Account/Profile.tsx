@@ -30,6 +30,7 @@ export default function Profile() {
     dispatch(setCurrentUser(updatedProfile));
   };
 
+
   return (
     <div className="wd-profile-screen">
       <h3>Profile</h3>

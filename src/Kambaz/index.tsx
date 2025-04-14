@@ -7,11 +7,11 @@ import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import * as userClient from "./Account/client";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import ProtectedRoute from "./Account/ProtecttedRoute";
 import Session from "./Account/Session"
 import { useEffect } from "react";
 import { useSelector } from "react-redux"
+import * as courseClient from "./Courses/client";
 export default function Kambaz() {
     const [courses, setCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -30,23 +30,23 @@ export default function Kambaz() {
       _id: "1234", name: "New Course", number: "New Number",
       startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
     });
-    const addNewCourse = () => {
-      setCourses([...courses, { ...course, _id: uuidv4() }]);
+    const addNewCourse = async () => {
+        const newCourse = await userClient.createCourse(course);
+        setCourses([ ...courses, newCourse ]);
+      };
+
+      const deleteCourse = async (courseId: string) => {
+        const status = await courseClient.deleteCourse(courseId); //what 
+        setCourses(courses.filter((course) => course._id !== courseId));
     };
-    const deleteCourse = (courseId: any) => {
-      setCourses(courses.filter((course) => course._id !== courseId));
-    };
-    const updateCourse = () => {
-      setCourses(
-        courses.map((c) => {
-          if (c._id === course._id) {
-            return course;
-          } else {
-            return c;
-          }
+    const updateCourse = async () => {
+        await courseClient.updateCourse(course);
+        setCourses(courses.map((c) => {
+            if (c._id === course._id) { return course; }
+            else { return c; }
         })
-      );
-    };
+      );};
+    
   
   return (
     <Session>

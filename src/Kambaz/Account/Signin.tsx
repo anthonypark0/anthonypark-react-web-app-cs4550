@@ -2,59 +2,78 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as client from "./client";
-import { setCurrentUser } from "../Account/reducer";
+import { setCurrentUser } from "./reducer";
 
 export default function Signin() {
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [credentials, setCredentials] = useState<{ username: string; password: string }>({
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCredentials((prevCredentials) => ({
+      ...prevCredentials,
+      [name]: value,
+    }));
+  };
 
   const signin = async () => {
     try {
       const user = await client.signin(credentials);
+
       if (!user) {
-        alert("Invalid username or password");
+        setError("Invalid credentials. Please try again.");
         return;
       }
       dispatch(setCurrentUser(user));
+
       navigate("/Kambaz/Dashboard");
-    } catch (error) {
-      console.error("Sign-in failed:", error);
-      alert("Error signing in. Please try again.");
+    } catch (error: any) {
+      setError("An error occurred while trying to sign in. Please try again.");
+      console.error("Signin error:", error);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700">Username</label>
+    <div className="signin-container">
+      <h2>Sign In</h2>
+      {error && <p className="error-message">{error}</p>}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          signin();
+        }}
+      >
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
           <input
             type="text"
+            id="username"
+            name="username"
             value={credentials.username}
-            onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Enter username"
+            onChange={handleChange}
+            required
           />
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-700">Password</label>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
           <input
             type="password"
+            id="password"
+            name="password"
             value={credentials.password}
-            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Enter password"
+            onChange={handleChange}
+            required
           />
         </div>
-        <button
-          onClick={signin}
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-        >
+        <button type="submit" className="signin-button">
           Sign In
         </button>
-      </div>
+      </form>
     </div>
   );
 }
