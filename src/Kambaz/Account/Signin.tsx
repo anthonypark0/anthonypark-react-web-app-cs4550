@@ -1,30 +1,60 @@
-import {Form, Button} from "react-bootstrap"
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { setCurrentUser } from "./reducer";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as client from "./client";
+import { setCurrentUser } from "../Account/reducer";
+
 export default function Signin() {
-    const [credentials, setCredentials] = useState<any>({});
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const signin = async () => {
-        const user =  await client.signin(credentials);
-        if (!user) return;
-        dispatch(setCurrentUser(user));
-        navigate("/Kambaz/Dashboard");
-      };
-    
-  
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const signin = async () => {
+    try {
+      const user = await client.signin(credentials);
+      if (!user) {
+        alert("Invalid username or password");
+        return;
+      }
+      dispatch(setCurrentUser(user));
+      navigate("/Kambaz/Dashboard");
+    } catch (error) {
+      console.error("Sign-in failed:", error);
+      alert("Error signing in. Please try again.");
+    }
+  };
+
   return (
-    <div id="wd-signin-screen">
-      <h1>Sign in</h1>
-      <Form.Control defaultValue={credentials.username}
-             onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-             className="mb-2" placeholder="username" id="wd-username" /><br />
-      <Form.Control defaultValue={credentials.password}
-             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-             className="mb-2" placeholder="password" type="password" id="wd-password" /><br />
-      <Button onClick={signin} id="wd-signin-btn" className="w-100" > Sign in </Button><br />
-      <Link id="wd-signup-link" to="/Kambaz/Account/Signup">Sign up</Link>
-    </div> );}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
+        <div className="mb-4">
+          <label className="block text-gray-700">Username</label>
+          <input
+            type="text"
+            value={credentials.username}
+            onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Enter username"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700">Password</label>
+          <input
+            type="password"
+            value={credentials.password}
+            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="Enter password"
+          />
+        </div>
+        <button
+          onClick={signin}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+        >
+          Sign In
+        </button>
+      </div>
+    </div>
+  );
+}
