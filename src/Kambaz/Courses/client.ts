@@ -1,18 +1,20 @@
 import axios from "axios";
 const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
+const axiosWithCredentials = axios.create({ withCredentials: true });
 export const fetchAllCourses = async () => {
-  const { data } = await axios.get(COURSES_API);
-  return data;
-};
+    const { data } = await axiosWithCredentials.get(COURSES_API);
+    return data;
+   };
+   
 
 export const deleteCourse = async (id: string) => {
-    const { data } = await axios.delete(`${COURSES_API}/${id}`);
+    const { data } = await axiosWithCredentials.delete(`${COURSES_API}/${id}`);
     return data;
   };
   
   export const updateCourse = async (course: any) => {
-    const { data } = await axios.put(`${COURSES_API}/${course._id}`, course);
+    const { data } = await axiosWithCredentials.put(`${COURSES_API}/${course._id}`, course);
     return data;
   };
 
@@ -30,3 +32,8 @@ export const deleteCourse = async (id: string) => {
     return response.data;
   };
   
+  export const createCourse = async (course: any) => {
+    const { data } = await axiosWithCredentials.post(COURSES_API, course);
+    return data;
+   };
+   
