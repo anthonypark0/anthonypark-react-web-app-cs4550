@@ -6,8 +6,8 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import * as assignmentsClient from "../client";
-import { setAssignments, addAssignment } from "./reducer";
-
+import { setAssignments, addAssignment, deleteAssignment } from "./reducer";
+import * as secondClient from "./client";
 export default function Assignments() {
   const { cid } = useParams();
   const dispatch = useDispatch();
@@ -28,6 +28,13 @@ export default function Assignments() {
     dispatch(addAssignment(newAssignment));
     setAssignmentName("");
   }
+
+  const deleteAssignmentHandler = async (assignmentId : string) => {
+    await secondClient.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+
+  
   const fetchAssignmentsForCourse = async () => {
     const assignments = await assignmentsClient.findAssignmentsForCourse(cid!);
     dispatch(setAssignments(assignments));
@@ -65,7 +72,12 @@ export default function Assignments() {
                     <b>Points:</b> {assignment.points ?? 0}
                   </div>
                 </div>
-                <FaTrash className="text-danger me-2 mb-1" role="button" />
+                <FaTrash
+                  className="text-danger me-2 mb-1"
+                  role="button"
+                  onClick={() => deleteAssignmentHandler(assignment._id)}
+                  title="Delete Assignment"
+                />
               </div>
             </ListGroup.Item>
           ))

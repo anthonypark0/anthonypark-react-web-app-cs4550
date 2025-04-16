@@ -2,6 +2,7 @@ import axios from "axios";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
+const ASSIGNMENT_API = `${REMOTE_SERVER}/api/assignments`;
 export const findAssignmentsByCourse = async (courseId: string) => {
     const { data } = await axiosWithCredentials.get(`/api/assignments/course/${courseId}`);
     return data;
@@ -13,7 +14,7 @@ export const findAssignmentsByCourse = async (courseId: string) => {
   };
   
   export const deleteAssignment = async (assignmentId: string) => {
-    const { status } = await axiosWithCredentials.delete(`/api/assignments/${assignmentId}`);
+    const { status } = await axiosWithCredentials.delete(`${ASSIGNMENT_API}/${assignmentId}`);
     return status === 200;
   };
   
