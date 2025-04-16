@@ -19,13 +19,12 @@ export const deleteCourse = async (id: string) => {
   };
 
   export const findModulesForCourse = async (courseId: string) => {
-    const response = await axios
-      .get(`${COURSES_API}/${courseId}/modules`);
+    const response = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/modules`);
     return response.data;
   };
   
   export const createModuleForCourse = async (courseId: string, module: any) => {
-    const response = await axios.post(
+    const response = await axiosWithCredentials.post(
       `${COURSES_API}/${courseId}/modules`,
       module
     );
