@@ -11,7 +11,13 @@ export default function Dashboard({
   addNewCourse,
   deleteCourse,
   updateCourse,
+  enrolling,
+  setEnrolling,
+  updateEnrollment
 }: {
+updateEnrollment: (courseId: string, enrolled: boolean) => void;
+enrolling: boolean;
+setEnrolling: (enrolling: boolean) => void;
   courses: any[];
   course: any;
   setCourse: (course: any) => void;
@@ -20,6 +26,7 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer); // Get the current user from Redux
+  /*
   const [userEnrollments, setUserEnrollments] = useState<any[]>([]);
 
   useEffect(() => {
@@ -42,10 +49,16 @@ export default function Dashboard({
       console.error("Error unenrolling from course:", error);
     }
   };
+  */
 
   return (
     <div id="wd-dashboard">
-      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      <h1 id="wd-dashboard-title">Dashboard
+      <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+          {enrolling ? "My Courses" : "All Courses"}
+        </button>
+      
+      </h1> <hr />
       <h5>
         New Course
         <button
@@ -92,6 +105,16 @@ export default function Dashboard({
                   <Card.Img src="/images/reactjs.jpg" variant="top" width="100%" height={160} />
                   <Card.Body className="card-body">
                     <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                    {enrolling && (
+              <button 
+              onClick={(event) => {
+                event.preventDefault();
+                updateEnrollment(course._id, !course.enrolled);
+              }}
+              className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
+                {course.enrolled ? "Unenroll" : "Enroll"}
+              </button>
+            )}
                       {course.name}
                     </Card.Title>
                     <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>
@@ -121,18 +144,7 @@ export default function Dashboard({
                       Edit
                     </button>
 
-                    {/* Check if the user is enrolled in the course */}
-                    {userEnrollments.some((e) => e.course === course._id) && (
-                      <button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          handleUnenroll(course._id);
-                        }}
-                        className="btn btn-danger float-end ms-2"
-                      >
-                        Unenroll
-                      </button>
-                    )}
+               
                   </Card.Body>
                 </Link>
               </Card>
