@@ -12,10 +12,10 @@ export default function Assignments() {
   const { cid } = useParams();
   const dispatch = useDispatch();
   const [assignmentName, setAssignmentName] = useState("");
-  const [assignmentDescription, setAssignmentDescription] = useState("");
-  const [assignmentPoints, setAssignmentPoints] = useState(0);
-  const [assignmentDueDate, setAssignmentDueDate] = useState("");
-  const [assignmentAvailable, setAssignmentAvailable] = useState("");
+  const [assignmentDescription] = useState("");
+  const [assignmentPoints] = useState(0);
+  const [assignmentDueDate] = useState("");
+  const [assignmentAvailable] = useState("");
   const addAssignmentHandler = async() => {
     const newAssignment = await assignmentsClient.createAssignmentForCourse(cid!, {
         _id: Math.random().toString(36).substr(2, 9),  // Generates a random id for the new assignment
