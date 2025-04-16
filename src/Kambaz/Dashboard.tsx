@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Row, Col, Card, Button, FormControl } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import * as enrollmentClient from "./client"; // Import the client for enrollments
-import { useSelector } from "react-redux";
+//import { useEffect, useState } from "react";
+//import * as enrollmentClient from "./client"; // Import the client for enrollments
+//import { useSelector } from "react-redux";
 
 export default function Dashboard({
   courses,
@@ -25,7 +25,7 @@ setEnrolling: (enrolling: boolean) => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
 }) {
-  const { currentUser } = useSelector((state: any) => state.accountReducer); // Get the current user from Redux
+ // const { currentUser } = useSelector((state: any) => state.accountReducer); // Get the current user from Redux
   /*
   const [userEnrollments, setUserEnrollments] = useState<any[]>([]);
 
